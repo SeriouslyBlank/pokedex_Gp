@@ -16,26 +16,31 @@ export function initState() :State {
 		    exit: {
 		      name: "exit",
 		      description: "Exits the pokedex",
+		      usage: "exit",
 		      callback: commandExit,
 		    },
 		    help: {
 		    	name: "help",
 		    	description: "Displays a help message",
+		    	usage: "help",
 		    	callback: commandHelp,
 		    },
 		    map: {
 		    	name: "map",
 		    	description: "Displays the next 20 locations",
+		    	usage: "map",
 		    	callback: commandMap,
 		    },
 		    mapb: {
 		    	name: "mapb",
 		    	description: "Displays the previous 20 locations",
+		    	usage: "mapb",
 		    	callback: commandMapb,
 		    },
 		    explore: {
 		    	name: "explore",
-		    	description: "Explores the area and shows the list of pokemon that can be found",
+		    	description: "Explores the area and shows the list of pokemon that can be found:",
+		    	usage: "explore <area-name>",
 		    	callback: explore,
 		    }
 		};
@@ -51,6 +56,7 @@ export function initState() :State {
 export type CLICommand = {
 	name: string;
 	description: string;
+	usage: string;
 	callback: (state: State, ...args: string[]) => Promise<void>;
 }
 

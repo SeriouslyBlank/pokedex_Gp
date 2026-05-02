@@ -9,12 +9,11 @@ export async function commandExit(_state: State): Promise<void> {
 
 export async function commandHelp(_state: State):Promise<void> {
 	console.log("Welcome to the Pokedex!");
-	console.log("Usage:");
+	console.log("List of commands available:");
 	console.log(" ");
-	console.log(`help: ${_state.commands.help.description}`);
-	console.log(`exit: ${_state.commands.exit.description}`);
-	console.log(`map: ${_state.commands.map.description}`);
-	console.log(`mapb: ${_state.commands.mapb.description}`);
+	Object.values(_state.commands).forEach((command) => {
+		console.log(`${command.name}: ${command.description} \n Command Usage: ${command.usage}`);
+	});
 }
 
 //provides a map of the current place ig
@@ -62,11 +61,20 @@ export async function commandMapb(_state: State): Promise<void> {
 
 
 export async function explore(_state: State, ...[locarea, ...ignored]: string[]): Promise<void>{
-	console.log(`Exploring ${locarea}`);
-	const dataLoc = await _state.PokeAPI.fetchLocation(locarea);
-	const pokeEncounter = await _state.PokeAPI.fetchPokemonInArea(dataLoc.url);
-	console.log(`Found Pokemon: `);
-	pokeEncounter.forEach((item)=> {
-		console.log(` - ${item.pokemon.name}`)
-	});
+	if (!locarea) {
+		console.log(`No area-name provided: \n Command Usage: ${_state.commands.explore.usage}`);
+	} else {
+		console.log(`Exploring ${locarea}`);
+		const dataLoc = await _state.PokeAPI.fetchLocation(locarea);
+		if (!dataLoc) {
+			console.log(`Incorrect area-name: ${locarea} \n Use map or mapb command to view CORRECT area-name`);
+		} else {
+			const pokeEncounter = await _state.PokeAPI.fetchPokemonInArea(dataLoc.url);
+			console.log(`Found Pokemon: `);
+			pokeEncounter.forEach((item)=> {
+				console.log(` - ${item.pokemon.name}`)
+			});
+		}
+		
+	}
 }

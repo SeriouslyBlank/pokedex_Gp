@@ -43,6 +43,16 @@ export class PokeAPI {
 
   //fetches the location obj based on name; idk what to do with this function as it is rn though
   async fetchLocation(locationName: string): Promise<Location> {
+    if (this.#cache.size === 0) {
+    } else {
+      const cacheResult = this.#cache.get<Location[]>("locURL");
+      if (cacheResult) {
+        const result = cacheResult.find( (data: {name: string, url: string}) => data.name === locationName)
+        if (result) {
+          return result;
+        }
+      }
+    }
     const locURL = `${PokeAPI.baseURL}/location-area?limit=1500`;
     try {
       const response = await fetch(locURL, {
@@ -50,6 +60,7 @@ export class PokeAPI {
         mode: "cors",
       });
       const data = await response.json();
+      this.#cache.add("locURL", data.results);
       const locationFind = data.results.find( (data: {name: string, url: string}) => data.name === locationName);
       return locationFind;
     } catch(error) {
