@@ -26,6 +26,10 @@ export function startREPL(_state: State){
 
       } else if (inputClean[0] === "exit") {
         _state.commands.exit.callback(_state);
+      } else if (inputClean[0] === "map") {
+        _state.commands.map.callback(_state);
+      } else if (inputClean[0] === "mapb") {
+        _state.commands.mapb.callback(_state);
       } else {
         console.log("Unknown command");
       }
