@@ -1,4 +1,4 @@
-import { error } from "console";
+
 
 export class PokeAPI {
   private static readonly baseURL = "https://pokeapi.co/api/v2";
@@ -26,7 +26,7 @@ export class PokeAPI {
         return data;
       }      
     } catch(err) {
-      throw error(`Failed fetchlocations Error: ${err} \n pageURL: ${pageURL}`);
+      throw new Error(`Failed fetchlocations Error: ${err} \n pageURL: ${pageURL}`);
     }    
   }
 
@@ -42,7 +42,7 @@ export class PokeAPI {
       const locationFind = data.results.find( (data: {name: string, url: string}) => data.name === locationName);
       return locationFind;
     } catch(error) {
-      throw Error(`Failed in fetching the location for ${locationName} with the error ${error}`);
+      throw new Error(`Failed in fetching the location for ${locationName} with the error ${error}`);
     }
   }
 }
@@ -51,10 +51,7 @@ export type ShallowLocations = {
   count: number;
   next: string| null;
   previous: string | null;
-  results: [{
-    name: string,
-    url: string
-  }]
+  results: Location[],
 };
 
 export type Location = {

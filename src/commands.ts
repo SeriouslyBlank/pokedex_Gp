@@ -1,4 +1,3 @@
-import { error } from "console";
 import type { State } from "./state.js";
 
 export async function commandExit(_state: State): Promise<void> {
@@ -30,7 +29,7 @@ export async function commandMap(_state: State): Promise<void> {
 				console.log(data2.name);
 			})
 		} catch(err) {
-			throw Error(`Failed Map command cuz of ${err}  \n Next location was provided: ${_state.nextLocationsURL}`)
+			throw new Error(`Failed Map command cuz of ${err}  \n Next location was provided: ${_state.nextLocationsURL}`)
 		}
 	} else {
 		try {
@@ -41,7 +40,7 @@ export async function commandMap(_state: State): Promise<void> {
 				console.log(data2.name);
 			})
 		} catch(err) {
-			throw Error(`Failed Map command cuz of ${err}  \n Next location was provided: ${_state.nextLocationsURL}`)
+			throw new Error(`Failed Map command cuz of ${err}  \n Next location was provided: ${_state.nextLocationsURL}`)
 		}
 	}
 }
