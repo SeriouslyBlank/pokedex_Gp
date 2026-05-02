@@ -61,7 +61,12 @@ export async function commandMapb(_state: State): Promise<void> {
 }
 
 
-//export async function explore(_state: State, ...args: string[]){
-
-	
-//}
+export async function explore(_state: State, ...[locarea, ...ignored]: string[]): Promise<void>{
+	console.log(`Exploring ${locarea}`);
+	const dataLoc = await _state.PokeAPI.fetchLocation(locarea);
+	const pokeEncounter = await _state.PokeAPI.fetchPokemonInArea(dataLoc.url);
+	console.log(`Found Pokemon: `);
+	pokeEncounter.forEach((item)=> {
+		console.log(` - ${item.pokemon.name}`)
+	});
+}

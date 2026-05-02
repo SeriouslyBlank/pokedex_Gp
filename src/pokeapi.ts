@@ -13,7 +13,7 @@ export class PokeAPI {
 
   //returns the pokeapi location area, the returned value is being used to set the nextlocationurl and prevlocationurl of the state obj and a list of locations are sent limited to 20
   async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
-    const targetURL = pageURL ?? `${PokeAPI.baseURL}/location-area`; //null or undefined then the url will be locarea
+    const targetURL = pageURL ?? `${PokeAPI.baseURL}/location-area?offset=0&limit=20`; //null or undefined then the url will be locarea
     if (this.#cache.size === 0) {
     } else {
       const cachedResult =  this.#cache.get<ShallowLocations>(targetURL);
@@ -56,6 +56,29 @@ export class PokeAPI {
       throw new Error(`Failed in fetching the location for ${locationName} with the error ${error}`);
     }
   }
+
+  async fetchPokemonInArea(url: string) :Promise<PokemonEncounter[]> {
+    if (this.#cache.size === 0) {
+    } else {
+      const cacheResult = this.#cache.get<PokemonEncounter[]>(url);
+      if (cacheResult) {
+        console.log("Found in Cache");
+        return cacheResult;
+      }
+    }
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        mode: "cors",
+      });
+      const data = await response.json();
+      this.#cache.add(url, data.pokemon_encounters);
+      const result = data.pokemon_encounters;
+      return result;
+    } catch (err) {
+      throw new Error(`Fetching pokemeon in area failed url: ${url}  with the error: ${err}`);
+    }  
+  }
 }
 
 export type ShallowLocations = {
@@ -70,5 +93,8 @@ export type Location = {
   url: string;
 };
 
-
+export type PokemonEncounter = {
+  pokemon: {name: string, url: string}
+  version_details: any
+}
 
