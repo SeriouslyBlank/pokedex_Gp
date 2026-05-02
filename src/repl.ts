@@ -20,24 +20,20 @@ export function startREPL(_state: State){
   _state.readline.prompt();
   _state.readline.on('line', (input:string)=> {
     const inputClean = cleanInput(input);
-    if (inputClean) {
-      if (inputClean[0] === "help") {
-        _state.commands.help.callback(_state);
 
-      } else if (inputClean[0] === "exit") {
-        _state.commands.exit.callback(_state);
-      } else if (inputClean[0] === "map") {
-        _state.commands.map.callback(_state);
-      } else if (inputClean[0] === "mapb") {
-        _state.commands.mapb.callback(_state);
+    if (inputClean) {
+      const cmdName = inputClean[0];
+
+      const args = inputClean[1] ?? "";
+
+      const command = _state.commands[cmdName];
+
+      if (command) {
+        command.callback(_state, args);
       } else {
         console.log("Unknown command");
       }
-      _state.readline.prompt();
-    } else {
-      _state.readline.prompt();
     }
-
+    _state.readline.prompt();
   });
-
 }

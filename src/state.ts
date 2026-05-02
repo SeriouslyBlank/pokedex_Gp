@@ -33,6 +33,11 @@ export function initState() :State {
 		    	description: "Displays the previous 20 locations",
 		    	callback: commandMapb,
 		    },
+		    explore: {
+		    	name: "explore",
+		    	description: "Explores the area and shows the list of pokemon that can be found",
+		    	callback: explore,
+		    }
 		};
 	}
 
@@ -46,7 +51,7 @@ export function initState() :State {
 export type CLICommand = {
 	name: string;
 	description: string;
-	callback: (state: State) => Promise<void>;
+	callback: (state: State, ...args: string[]) => Promise<void>;
 }
 
 

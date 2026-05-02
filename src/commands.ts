@@ -57,4 +57,11 @@ export async function commandMapb(_state: State): Promise<void> {
 	} else {
 		console.log(`You're on the first page!!!`);
 	}
+
 }
+
+
+//export async function explore(_state: State, ...args: string[]){
+
+	
+//}

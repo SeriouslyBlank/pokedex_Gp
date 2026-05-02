@@ -1,30 +1,41 @@
+import { Cache } from "./pokecache.js";
 
 
 export class PokeAPI {
   private static readonly baseURL = "https://pokeapi.co/api/v2";
+  #cache: Cache;
 
-  constructor() {}
+
+  constructor(cacheInterval: number = 1000 * 60 * 5) {
+    this.#cache = new Cache(cacheInterval); //default 5 mins for now
+  }
 
 
   //returns the pokeapi location area, the returned value is being used to set the nextlocationurl and prevlocationurl of the state obj and a list of locations are sent limited to 20
   async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
+    const targetURL = pageURL ?? `${PokeAPI.baseURL}/location-area`; //null or undefined then the url will be locarea
+    if (this.#cache.size === 0) {
+    } else {
+      const cachedResult =  this.#cache.get<ShallowLocations>(targetURL);
+      //checking if the value was undefined
+      if (cachedResult) { 
+        console.log("Found in cache")
+        return cachedResult;
+      }
+    }
+
+    //refactored the logic using targel url instead to make LIFE EASIER and code READABLE 6 months donw the line if i ever look back
+
     try {
-      if (pageURL) {
-        const response = await fetch(pageURL, {
-          method: "GET",
-          mode: "cors",
-        });
-        const data = await response.json();
-        return data;
-      } else {
-        const locAreaURL = `${PokeAPI.baseURL}/location-area`;
-        const response = await fetch(locAreaURL, {
-          method: "GET",
-          mode: "cors",
-        });
-        const data = await response.json();
-        return data;
-      }      
+      const response = await fetch(targetURL, {
+        method: "GET",
+        mode: "cors",
+      });
+
+      const data = await response.json();
+      console.log("Caching...");
+      this.#cache.add(targetURL, data);
+      return data;      
     } catch(err) {
       throw new Error(`Failed fetchlocations Error: ${err} \n pageURL: ${pageURL}`);
     }    
