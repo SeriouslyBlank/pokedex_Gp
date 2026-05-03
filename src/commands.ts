@@ -101,11 +101,42 @@ export async function handleCatch(_state: State, ...[pokname, ...ignored]: strin
 	
 }
 
+
 export async function inspect(_state:State, ...[pokname,...ignored]: string[]):Promise<void> {
 	if (pokname) {
-		
-
+		const pokData = _state.Pokedex[pokname];
+		if (!pokData) {
+			console.log(`You have not caught that Pokemon or the name is Incorrect :/`);
+		} else {
+			console.log("");
+			console.log(`Name: ${pokData.name}`);
+			console.log(`Height: ${pokData.height}`);
+			console.log(`Weight: ${pokData.weight}`);
+			console.log(`Stats: `);
+			pokData.stats.forEach((item)=> {
+				console.log(`  -${item.stat.name}: ${item.base_stat}`);
+			})
+			console.log(`Types: `);
+			pokData.types.forEach((item)=> {
+				console.log(`  -${item.type.name}`);
+			})
+		}
 	} else {
 		console.log(`\n Inspected nothing because nothing was provided \n Command Usage: ${_state.commands.inspect.usage}`)
 	}
+}
+
+
+export async function pokedex(_state: State):Promise<void>{
+	const pokeCaptured = Object.keys(_state.Pokedex)
+
+	if (pokeCaptured.length === 0 ) {
+		console.log(`Nothing in Your Pokedex, catch some when~?`);
+	} else {
+		console.log(`Your Pokedex`);
+		pokeCaptured.forEach((item) => {
+			console.log(` - ${item}`);
+		});
+	}
+	
 }

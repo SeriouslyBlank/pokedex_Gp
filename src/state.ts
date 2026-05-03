@@ -1,5 +1,5 @@
 import { createInterface, type Interface } from "readline";
-import { commandExit, commandHelp, commandMap, commandMapb, explore, handleCatch } from "./commands.js";
+import { commandExit, commandHelp, commandMap, commandMapb, explore, handleCatch, inspect, pokedex } from "./commands.js";
 import { PokeAPI } from "./pokeapi.js";
 
 
@@ -48,7 +48,19 @@ export function initState() :State {
 		    	description: "Tries to catch the pokemon",
 		    	usage: "catch <pokemon-name>",
 		    	callback: handleCatch,
-		    }
+		    },
+		    inspect: {
+		    	name: "inspect",
+		    	description: "Details about a Pokemon",
+		    	usage: "inspect <pokemon-name>",
+		    	callback: inspect,
+		    },
+		    pokedex: {
+		    	name: "pokedex",
+		    	description: "Your Pokedex",
+		    	usage: "pokedex",
+		    	callback: pokedex,
+		    },
 		};
 	}
 
