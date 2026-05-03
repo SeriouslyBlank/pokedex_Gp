@@ -1,4 +1,4 @@
-import type { State } from "./state.js";
+import type { Pokemon, State } from "./state.js";
 
 export async function commandExit(_state: State): Promise<void> {
 	console.log("Closing the Pokedex... Goodbye!");
@@ -76,5 +76,36 @@ export async function explore(_state: State, ...[locarea, ...ignored]: string[])
 			});
 		}
 		
+	}
+}
+
+
+export async function handleCatch(_state: State, ...[pokname, ...ignored]: string[]) : Promise<void> {
+	if (pokname) {
+		const data :Pokemon | null = await _state.PokeAPI.pokemon(pokname);
+		if (!data) {
+			console.log(`\n Pokemon name not correct \n 	OR \n API errors \n Command Usage: ${_state.commands.handleCatch.usage}`);
+		} else {
+			console.log(`\n Throwing a Pokeball at ${pokname}...`);
+			const captureChance = Math.random() * data.base_experience;
+			if (captureChance > data.base_experience/2) {
+				console.log(`${pokname} was caught!`);
+				_state.Pokedex[pokname] = data;
+			} else {
+				console.log(`${pokname} escaped!`);
+			}
+		}
+	} else {
+		console.log(`Caught nothing`)
+	}
+	
+}
+
+export async function inspect(_state:State, ...[pokname,...ignored]: string[]):Promise<void> {
+	if (pokname) {
+		
+
+	} else {
+		console.log(`\n Inspected nothing because nothing was provided \n Command Usage: ${_state.commands.inspect.usage}`)
 	}
 }

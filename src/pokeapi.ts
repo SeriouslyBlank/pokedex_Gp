@@ -1,4 +1,5 @@
 import { Cache } from "./pokecache.js";
+import { Pokemon } from "./state.js";
 
 
 export class PokeAPI {
@@ -89,6 +90,32 @@ export class PokeAPI {
     } catch (err) {
       throw new Error(`Fetching pokemeon in area failed url: ${url}  with the error: ${err}`);
     }  
+  }
+  async pokemon(pokname: string): Promise<Pokemon | null> {
+    const url = `${PokeAPI.baseURL}/pokemon/${pokname}`
+    try {
+      if (this.#cache.size === 0) {
+      } else {
+        const cacheResult = this.#cache.get<Pokemon>(pokname);
+        if (cacheResult){
+          console.log("Found in Cache");
+          return cacheResult;
+        }
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        mode: "cors",
+      });
+      if (!response.ok) {
+        return null;
+      }
+      const data = await response.json();
+      this.#cache.add(pokname, data);
+      return data;
+    } catch(err) {
+      throw new Error("Error in fetching pokemon \n Try Again");
+    }
   }
 }
 
